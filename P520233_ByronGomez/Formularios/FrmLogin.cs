@@ -46,5 +46,13 @@ namespace P520233_ByronGomez.Formularios
         {
             Application.Exit();
         }
+
+        private void BtnIngresar_Click(object sender, EventArgs e)
+        {
+
+            Globales.ObjetosGlobales.MiFormularioPrincipal.Show();
+            this.Hide();
+
+        }
     }
 }

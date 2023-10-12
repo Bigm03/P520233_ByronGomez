@@ -64,7 +64,7 @@ namespace Logica
          Sirve para hacer consultas tipo: SELECT FROM y crear un
          DataTable con dicha info.
         */
-        public DataTable EjecutarSELECT(String NombreSP, bool CargarEsquema = false)
+        public DataTable EjecutarSelect(String NombreSP, bool CargarEsquema = false)
         {
             DataTable Retorno = new DataTable();
 
