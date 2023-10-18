@@ -32,6 +32,22 @@ namespace Logica.Models
         {
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+
+            //ahora  agregamos todos los parametros que solicita el SP de agregar
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Cedula", this.Cedula));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Nombre", this.Nombre));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Correo", this.Correo));
+            //TODO: Encriptar la contraseña
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Contrasennia", this.Contrasennia));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Telefono", this.Telefono));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Direccion", this.Direccion));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@UsuarioRolID", this.MiUsuarioRol.UsuarioRolID));
+
+            int resultado = MiCnn.EjecutarDML("SPUsuariosAgregar");
+
+            if (resultado > 0) R = true;
+
             return R;
         }
 
@@ -56,16 +72,36 @@ namespace Logica.Models
             return R;
         }
 
-        public bool ConsultarPorCedula(string Cedula)
+        public bool ConsultarPorCedula(string pCedula)
         {
             bool R = false;
 
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Cedula", pCedula));
+
+            DataTable dt = new DataTable();
+
+            dt = MiCnn.EjecutarSelect("SPUsuariosConsultarPorCedula");
+
+            if (dt != null && dt.Rows.Count > 0) R = true;
+         
             return R;
         }
 
-        public bool ConsultarPorCorreo(string Correo)
+        public bool ConsultarPorCorreo(string pCorreo)
         {
             bool R = false;
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Correo", pCorreo));
+
+            DataTable dt = new DataTable();
+
+            dt = MiCnn.EjecutarSelect("SPUsuariosConsultarPorCorreo");
+
+            if (dt != null && dt.Rows.Count > 0) R = true;
 
             return R;
         }
