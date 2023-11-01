@@ -48,5 +48,10 @@ namespace P520233_ByronGomez.Formularios
         {
             Application.Exit();
         }
+
+        private void FrmPrincipal_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
