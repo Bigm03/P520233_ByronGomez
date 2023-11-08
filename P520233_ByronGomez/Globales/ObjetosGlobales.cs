@@ -16,5 +16,9 @@ namespace P520233_ByronGomez.Globales
         public static Formularios.FrmUsuarioGestion 
             MiFormularioDeGestionDeUsuarios = new Formularios.FrmUsuarioGestion();
 
+        //este sera el usuario validado en el login, tendra un scope global
+        //en toda la aplicacion
+        public static Logica.Models.Usuario MiUsuarioGlobal = new Logica.Models.Usuario();
+
     }
 }

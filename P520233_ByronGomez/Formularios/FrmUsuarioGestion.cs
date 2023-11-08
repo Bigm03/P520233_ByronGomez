@@ -48,7 +48,7 @@ namespace P520233_ByronGomez.Formularios
 
             CargarComboRolesDeUsuario();
 
-            CargarListaUsuarios();
+            CargarListaUsuarios(CbVerActivos.Checked);
 
             ActivarBotonAgregar();
         }
@@ -80,15 +80,25 @@ namespace P520233_ByronGomez.Formularios
 
         //todas las funcionalidades especificas y que se puedan reutilizar DEBEN
         //ser encapsuladadas
-        private void CargarListaUsuarios()
+        private void CargarListaUsuarios(bool VerActivos, string FiltroBusqueda = "")
         {
             Logica.Models.Usuario miusuario = new Logica.Models.Usuario();
 
             DataTable lista = new DataTable();
 
-            lista = miusuario.ListarActivos();
 
-            DgvListausuarios.DataSource = lista;
+            if (VerActivos)
+            {
+                //Si se qiere ver los usuarios activos
+                lista = miusuario.ListarActivos(FiltroBusqueda);
+                DgvListausuarios.DataSource = lista;
+            }
+            else
+            {
+                //Usuarios inactivos
+                lista = miusuario.ListarInactivos(FiltroBusqueda);
+                DgvListausuarios.DataSource = lista;
+            }
         }
 
         private bool ValidarDatosRequeridos(bool OmitirContrasennia = false)
@@ -222,7 +232,7 @@ namespace P520233_ByronGomez.Formularios
                             MessageBox.Show("Usuario ingresado correctamente!", ":)", MessageBoxButtons.OK);
 
                             LimpiarForm();
-                            CargarListaUsuarios();
+                            CargarListaUsuarios(CbVerActivos.Checked);
                         }
                         else
                         {
@@ -251,7 +261,7 @@ namespace P520233_ByronGomez.Formularios
 
         private void BtnCerrar_Click(object sender, EventArgs e)
         {
-
+            this.Close();
         }
 
         private void DgvListausuarios_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -354,7 +364,7 @@ namespace P520233_ByronGomez.Formularios
                             MessageBox.Show("Usuario modificado correctamente!", ":)", MessageBoxButtons.OK);
 
                             LimpiarForm();
-                            CargarListaUsuarios();
+                            CargarListaUsuarios(CbVerActivos.Checked);
                             ActivarBotonAgregar();
 
                         }
@@ -374,6 +384,117 @@ namespace P520233_ByronGomez.Formularios
 
 
 
+        }
+
+        private void BtnEliminar_Click(object sender, EventArgs e)
+        {
+            if (CbVerActivos.Checked)
+            {
+                if (MiUsuarioLocal.UsuarioID > 0)
+                {
+                    string msg = string.Format("¿Está seguro de eliminar al usuario {0}?", MiUsuarioLocal.Nombre);
+
+                    DialogResult respuesta = MessageBox.Show(msg, "Confirmacion Requerida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (respuesta == DialogResult.Yes && MiUsuarioLocal.Eliminar())
+                    {
+                        MessageBox.Show("El Usuario ha sido eliminado", "!!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        LimpiarForm();
+                        CargarListaUsuarios(CbVerActivos.Checked);
+                        ActivarBotonAgregar();
+
+                    }
+                }
+            }
+            else
+            {
+                //se procede a activar
+                if (MiUsuarioLocal.UsuarioID > 0)
+                {
+                    string msg = string.Format("¿Está seguro de activar al usuario {0}?", MiUsuarioLocal.Nombre);
+
+                    DialogResult respuesta = MessageBox.Show(msg, "Confirmacion Requerida", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (respuesta == DialogResult.Yes && MiUsuarioLocal.Activar())
+                    {
+                        MessageBox.Show("El Usuario ha sido activado", "!!!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        LimpiarForm();
+                        CargarListaUsuarios(CbVerActivos.Checked);
+                        ActivarBotonAgregar();
+
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            
+        }
+
+        private void TxtUsuarioCedula_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Tools.Validaciones.CaracteresNumeros(e);
+        }
+
+        private void TxtUsuarioNombre_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Tools.Validaciones.CaracteresTexto(e);
+        }
+
+        private void TxtUsuarioCorreo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Tools.Validaciones.CaracteresTexto(e,false,true);
+        }
+
+        private void TxtUsuarioTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Tools.Validaciones.CaracteresNumeros(e);
+        }
+
+        private void TxtUsuarioContrasennia_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Tools.Validaciones.CaracteresTexto(e);
+        }
+
+        private void TxtUsuarioDireccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = Tools.Validaciones.CaracteresTexto(e);
+        }
+
+        private void CbVerActivos_CheckedChanged(object sender, EventArgs e)
+        {
+
+            CargarListaUsuarios(CbVerActivos.Checked);
+
+
+            if (CbVerActivos.Checked)
+            {
+                BtnEliminar.Text = "ELIMINAR";
+            }
+            else
+            {
+                BtnEliminar.Text = "ACTIVAR";
+            }
+
+
+        }
+
+        private void TxtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(TxtBuscar.Text.Trim()) && TxtBuscar.Text.Count() >= 3)
+            {
+                CargarListaUsuarios(CbVerActivos.Checked, TxtBuscar.Text.Trim());
+            }
+            else
+            {
+                CargarListaUsuarios(CbVerActivos.Checked);
+            }
         }
     }
 }

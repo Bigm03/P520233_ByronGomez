@@ -61,7 +61,7 @@ namespace Logica.Models
             Conexion MiCnn = new Conexion();
 
 
-            //Ahora agregamos todos los parametros que solicuita el sp de agregar
+            //Ahora agregamos todos los parametros que solicita el sp de agregar
 
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Cedula", this.Cedula));
             MiCnn.ListaDeParametros.Add(new SqlParameter("@Nombre", this.Nombre));
@@ -87,6 +87,29 @@ namespace Logica.Models
         public bool Eliminar()
         {
             bool R = false;
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ID", this.UsuarioID));
+
+            int resultado = MiCnn.EjecutarDML("SPUsuariosEliminar");
+
+            if (resultado > 0) R = true;
+
+            return R;
+        }
+
+        public bool Activar()
+        {
+            bool R = false;
+
+            Conexion MiCnn = new Conexion();
+
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@ID", this.UsuarioID));
+
+            int resultado = MiCnn.EjecutarDML("SPUsuariosActivar");
+
+            if (resultado > 0) R = true;
 
             return R;
         }
@@ -188,7 +211,7 @@ namespace Logica.Models
             return R;
         }
 
-        public DataTable ListarActivos()
+        public DataTable ListarActivos(string pFiltro = "")
         {
             DataTable R = new DataTable();
 
@@ -197,17 +220,28 @@ namespace Logica.Models
             Conexion MiCnn = new Conexion();
             //como el SP para listar requiere un párametro, hay que agregarlo a la lista
             MiCnn.ListaDeParametros.Add(new SqlParameter("@VerActivos", true));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Filtro", pFiltro));
 
             R = MiCnn.EjecutarSelect("SPUsuariosListar");
             
             return R;
         }
 
-        public DataTable ListarInactivos()
+        public DataTable ListarInactivos(string pFiltro = "")
         {
             DataTable R = new DataTable();
 
+            //hay que hacer instancia de la clase conexion
+
+            Conexion MiCnn = new Conexion();
+            //como el SP para listar requiere un párametro, hay que agregarlo a la lista
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@VerActivos", false));
+            MiCnn.ListaDeParametros.Add(new SqlParameter("@Filtro", pFiltro));
+
+            R = MiCnn.EjecutarSelect("SPUsuariosListar");
+
             return R;
+
         }
     }
 }

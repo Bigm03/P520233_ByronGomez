@@ -50,9 +50,31 @@ namespace P520233_ByronGomez.Formularios
         private void BtnIngresar_Click(object sender, EventArgs e)
         {
 
+            if (!string.IsNullOrEmpty(TxtUsuario.Text.Trim()) &&
+                !string.IsNullOrEmpty(TxtContrasennia.Text.Trim()))
+            {
+                //si hay valores en los cuadros de texto se produce a validarlos
+                string usuario = TxtUsuario.Text.Trim();
+                string contrasennia = TxtContrasennia.Text.Trim();
+
+                //TODO
+                //int idUsuario = Globales.ObjetosGlobales.MiUsuarioGlobal.Validar
+            }
+
+        }
+
+        private void Login_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Shift & e.Control & e.KeyCode == Keys.A)
+            {
+                BtnIngresoDirecto.Visible = true;
+            }
+        }
+
+        private void BtnIngresoDirecto_Click(object sender, EventArgs e)
+        {
             Globales.ObjetosGlobales.MiFormularioPrincipal.Show();
             this.Hide();
-
         }
     }
 }
