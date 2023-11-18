@@ -13,10 +13,13 @@ namespace Logica.Models
 
         public string MovimientoTipoDescripcion { get; set; }
 
-        public DataTable Listar()
+        public DataTable ListarTipo()
         {
             DataTable R = new DataTable();
 
+            Conexion MiCnn = new Conexion();
+
+            R = MiCnn.EjecutarSelect("SPMovimientoTipoListar");
 
             return R;
         }

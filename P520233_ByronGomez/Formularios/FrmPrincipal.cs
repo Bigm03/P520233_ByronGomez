@@ -51,7 +51,38 @@ namespace P520233_ByronGomez.Formularios
 
         private void FrmPrincipal_Load(object sender, EventArgs e)
         {
+            LblUsuario.Text = Globales.ObjetosGlobales.MiUsuarioGlobal.Nombre + "(" +
+                                        Globales.ObjetosGlobales.MiUsuarioGlobal.MiUsuarioRol.Rol + ")";
 
+            //ahora se debe ajustar los permiso de menús para que se muestren o no, dependiendo
+            //del tipo de rol
+
+            switch (Globales.ObjetosGlobales.MiUsuarioGlobal.MiUsuarioRol.UsuarioRolID)
+            {
+                //admin
+                case 1:
+                    //como admin tiene acceso a todo, no es necesario ocultar opciones
+                    break;
+
+                //empleado
+                case 2:
+                    //ocultan los menús correspondientes
+                    MnuGestionUsuarios.Enabled = false;
+                    MnuGestionProductos.Enabled = false;
+                    MnuGestionCategorias.Enabled = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void entradasYSalidasDeInventarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!Globales.ObjetosGlobales.MiFormularioMovimientos.Visible)
+            {
+                Globales.ObjetosGlobales.MiFormularioMovimientos = new FrmMovimientosInventario();
+                Globales.ObjetosGlobales.MiFormularioMovimientos.Show();
+            }
         }
     }
 }

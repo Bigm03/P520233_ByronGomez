@@ -57,9 +57,28 @@ namespace P520233_ByronGomez.Formularios
                 string usuario = TxtUsuario.Text.Trim();
                 string contrasennia = TxtContrasennia.Text.Trim();
 
-                //TODO
-                //int idUsuario = Globales.ObjetosGlobales.MiUsuarioGlobal.Validar
+                int idUsuario = Globales.ObjetosGlobales.MiUsuarioGlobal.ValidarIngreso(usuario, contrasennia);
+
+
+                if (idUsuario > 0)
+                {
+                    //la validacion es corrrecta. Ahora creamos el usuario global y además permitimos el ingreso
+                    //al sistema
+
+                    Globales.ObjetosGlobales.MiUsuarioGlobal = Globales.ObjetosGlobales.MiUsuarioGlobal.ConsultarPorID(idUsuario);
+
+                    Globales.ObjetosGlobales.MiFormularioPrincipal.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Acceso denegado!", "Error de validacion...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TxtUsuario.Focus();
+                    TxtUsuario.SelectAll();
+                }
+
             }
+            
 
         }
 

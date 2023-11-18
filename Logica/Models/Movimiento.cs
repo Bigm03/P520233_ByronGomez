@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Logica.Models
 {
-    internal class Movimiento
+    public class Movimiento
     {
         public Movimiento()
         {
