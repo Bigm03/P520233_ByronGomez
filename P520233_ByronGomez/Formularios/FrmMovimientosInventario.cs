@@ -33,7 +33,109 @@ namespace P520233_ByronGomez.Formularios
 
         private void BtnAplicar_Click(object sender, EventArgs e)
         {
+            //debemos validar que esten los datos minimos necesarios
+            if (ValidarMovimiento())
+            {
+                //una vez que tenemos los requisitos completos, se procede a "dar forma"
+                //al objeto de movimiento local.
 
+                //primero los atributos simples y compuestos del encabezado.
+                //luego a asignacion de los detalles
+                MiMovimientoLocal.Fecha = DtpFecha.Value.Date;
+                MiMovimientoLocal.Anotaciones = TxtAnotaciones.Text.Trim();
+
+                MiMovimientoLocal.MiTipo.MovimientoTipoID = Convert.ToInt32(CboxTipo.SelectedValue);
+                //a nivel de funcionalidad solo necesitamos el FK o sea el ID del tipo,
+                //la parte del texto no es necesario.
+
+                MiMovimientoLocal.MiUsuario = Globales.ObjetosGlobales.MiUsuarioGlobal;
+
+                //llenar la lista de detalles en el objeto local a patir de las filas
+                //del datatable de detalles
+                TrasladarDetalles();
+
+                //ahora que tenemos todo listo, procedemos a agregar el movimiento
+                if (MiMovimientoLocal.Agregar())
+                {
+
+                    MessageBox.Show("el movimiento se ha agregado correctamente",
+                        ":)", MessageBoxButtons.OK);
+
+                    //TODO: Generar un reporte visual en Crystal Reports.
+                    //se hara en clase reposicion sabado 2-dic.2023
+
+                }
+
+            }
+
+
+
+
+        }
+
+        private void TrasladarDetalles()
+        {
+            foreach (DataRow item in DtListaDetalleProductos.Rows)
+            {
+                Logica.Models.MovimientoDetalle NuevoDetalle = new Logica.Models.MovimientoDetalle();
+
+                NuevoDetalle.CantidadMovimiento = Convert.ToDecimal(item["CantidadMovimiento"]);
+
+                NuevoDetalle.Costo = Convert.ToDecimal(item["Costo"]);
+
+                NuevoDetalle.PrecioUnitario = Convert.ToDecimal(item["PrecioUnitario"]);
+
+                NuevoDetalle.SubTotal = Convert.ToDecimal(item["SubTotal"]);
+
+                NuevoDetalle.TotalIVA = Convert.ToDecimal(item["TotalIVA"]);
+
+                //atributo compuesto simple
+                NuevoDetalle.MiProducto.ProductoID = Convert.ToInt32(item["ProductoID"]);
+
+                //agregar el detalle nuevo a la lista del objeto local
+                MiMovimientoLocal.Detalles.Add(NuevoDetalle);
+            }
+        }
+
+        private bool ValidarMovimiento()
+        {
+           
+            bool R = false;
+
+            if (DtpFecha.Value.Date <= DateTime.Now.Date &&
+                CboxTipo.SelectedIndex > -1 &&
+                DtListaDetalleProductos.Rows.Count > 0)
+            {
+                R = true;
+
+
+            }
+            else
+            {
+                if (DtpFecha.Value.Date > DateTime.Now.Date)
+                {
+                    MessageBox.Show("la fecha del movimiento no puede " +
+                        "ser superior a la fecha actual", "Error de Validacion",
+                        MessageBoxButtons.OK);
+                    return false;
+                }
+
+                if (CboxTipo.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Debe seleccionar un tipo de movimiento ",
+                        "Error de Validacion", MessageBoxButtons.OK);
+                    return false;
+                }
+
+                if (DtListaDetalleProductos == null || DtListaDetalleProductos.Rows.Count == 0)
+                {
+                    MessageBox.Show("No se puede procesar un movimiento sin detalles",
+                       "Error de Validacion", MessageBoxButtons.OK);
+                    return false;
+                }
+            }
+
+            return R;
         }
 
         private void FrmMovimientosInventario_Load(object sender, EventArgs e)
@@ -106,12 +208,39 @@ namespace P520233_ByronGomez.Formularios
             DialogResult resp = FormDetalleProducto.ShowDialog();
 
             if (resp == DialogResult.OK) 
-            { 
-                //TODO agregar la nueva linera de detalle
-                
+            {
+                DgvListaDetalle.DataSource = DtListaDetalleProductos;
 
+                Totalizar();
             }
 
+        }
+
+        private void Totalizar()
+        {
+            decimal TotalCosto = 0;
+            decimal TotalSubTotal = 0;
+            decimal TotalImpuestos = 0;
+            decimal Total = 0;
+
+            if (DtListaDetalleProductos != null && DtListaDetalleProductos.Rows.Count > 0)
+            {
+                foreach (DataRow item in DtListaDetalleProductos.Rows)
+                {
+                    decimal Cantidad = Convert.ToDecimal(item["CantidadMovimiento"]);
+                    TotalCosto += Convert.ToDecimal(item["Costo"]) * Cantidad;
+                    TotalSubTotal += Convert.ToDecimal(item["SubTotal"]) * Cantidad;
+                    TotalImpuestos += Convert.ToDecimal(item["TotalIVA"]) * Cantidad;
+                    Total += TotalSubTotal + TotalImpuestos;
+
+                }
+
+                LblTotalCosto.Text = string.Format("{0:C2}", TotalCosto);
+                LblTotalSubTotal.Text = string.Format("{0:C2}", TotalSubTotal);
+                LblTotalImpuestos.Text = string.Format("{0:C2}", TotalImpuestos);
+                LblTotalGranTotal.Text = string.Format("{0:C2}", Total);
+
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace Logica.Models
 {
@@ -25,6 +26,47 @@ namespace Logica.Models
         public bool Agregar()
         {
             bool R = false;
+
+            //priumero hacemos un insert en el encabezado y RECOLECTAMOS el ID que se genera
+            //esto es indispensable ya que se necesita como FK en la tabla de Detalle
+            Conexion MyCnn = new Conexion();
+
+            MyCnn.ListaDeParametros.Add(new SqlParameter("@Fecha", this.Fecha));
+            MyCnn.ListaDeParametros.Add(new SqlParameter("@Anotaciones", this.Anotaciones));
+            MyCnn.ListaDeParametros.Add(new SqlParameter("@TipoMovimiento", this.MiTipo.MovimientoTipoID));
+            MyCnn.ListaDeParametros.Add(new SqlParameter("@UsuarioID", this.MiUsuario.UsuarioID));
+
+            Object RetornoSPAgregar = MyCnn.EjecutarSELECTEscalar("SPMovimientosAgregarEncabezado");
+
+            int IDMovimientoRecienCreado;
+
+            if (RetornoSPAgregar != null)
+            {
+                IDMovimientoRecienCreado = Convert.ToInt32(RetornoSPAgregar);
+
+                foreach (MovimientoDetalle item in this.Detalles)
+                {
+                    //por cada iteracion en la lista de detalles hacemos un insert en la
+                    //tabla de detalles
+
+                    Conexion MyCnnDetalle = new Conexion();
+
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@IDMovimiento", IDMovimientoRecienCreado));
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@IDProducto", item.MiProducto.ProductoID));
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@Cantidad", item.CantidadMovimiento));
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@Costo", item.Costo));
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@SubTotal", item.SubTotal));
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@TotalIVA", item.TotalIVA));
+                    MyCnnDetalle.ListaDeParametros.Add(new SqlParameter("@PrecioUnitario", item.PrecioUnitario));
+
+                    MyCnnDetalle.EjecutarDML("SPMovimientosAgregarDetalle");
+
+
+                }
+
+                R = true;
+
+            }
 
             return R;
         }
@@ -66,7 +108,7 @@ namespace Logica.Models
         //vemos que al llegar a la clase de detalle termina en "muchos"
         //1..*. Eso significa que el atributo tiene multiplicidad,
         //o sea que se puede repetir n veces
-        List<MovimientoDetalle> Detalles { get; set; }
+        public List<MovimientoDetalle> Detalles { get; set; }
 
         public DataTable AsignarEsquemaDelDetalle()
         {
