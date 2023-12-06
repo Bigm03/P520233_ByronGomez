@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace P520233_ByronGomez.Formularios
 {
     public partial class FrmMovimientosInventario : Form
@@ -15,7 +16,7 @@ namespace P520233_ByronGomez.Formularios
 
         public Logica.Models.Movimiento MiMovimientoLocal { get; set; }
 
-        public DataTable DtListaDetalleProductos {  get; set; }
+        public DataTable DtListaDetalleProductos { get; set; }
 
         public FrmMovimientosInventario()
         {
@@ -36,33 +37,60 @@ namespace P520233_ByronGomez.Formularios
             //debemos validar que esten los datos minimos necesarios
             if (ValidarMovimiento())
             {
-                //una vez que tenemos los requisitos completos, se procede a "dar forma"
-                //al objeto de movimiento local.
 
-                //primero los atributos simples y compuestos del encabezado.
-                //luego a asignacion de los detalles
-                MiMovimientoLocal.Fecha = DtpFecha.Value.Date;
-                MiMovimientoLocal.Anotaciones = TxtAnotaciones.Text.Trim();
+                DialogResult respuesta = MessageBox.Show("¿Desea Continuar?", "???", MessageBoxButtons.YesNo);
 
-                MiMovimientoLocal.MiTipo.MovimientoTipoID = Convert.ToInt32(CboxTipo.SelectedValue);
-                //a nivel de funcionalidad solo necesitamos el FK o sea el ID del tipo,
-                //la parte del texto no es necesario.
-
-                MiMovimientoLocal.MiUsuario = Globales.ObjetosGlobales.MiUsuarioGlobal;
-
-                //llenar la lista de detalles en el objeto local a patir de las filas
-                //del datatable de detalles
-                TrasladarDetalles();
-
-                //ahora que tenemos todo listo, procedemos a agregar el movimiento
-                if (MiMovimientoLocal.Agregar())
+                if (respuesta == DialogResult.Yes)
                 {
 
-                    MessageBox.Show("el movimiento se ha agregado correctamente",
-                        ":)", MessageBoxButtons.OK);
 
-                    //TODO: Generar un reporte visual en Crystal Reports.
-                    //se hara en clase reposicion sabado 2-dic.2023
+
+
+                    //una vez que tenemos los requisitos completos, se procede a "dar forma"
+                    //al objeto de movimiento local.
+
+                    //primero los atributos simples y compuestos del encabezado.
+                    //luego a asignacion de los detalles
+                    MiMovimientoLocal.Fecha = DtpFecha.Value.Date;
+                    MiMovimientoLocal.Anotaciones = TxtAnotaciones.Text.Trim();
+
+                    MiMovimientoLocal.MiTipo.MovimientoTipoID = Convert.ToInt32(CboxTipo.SelectedValue);
+                    //a nivel de funcionalidad solo necesitamos el FK o sea el ID del tipo,
+                    //la parte del texto no es necesario.
+
+                    MiMovimientoLocal.MiUsuario = Globales.ObjetosGlobales.MiUsuarioGlobal;
+
+                    //llenar la lista de detalles en el objeto local a patir de las filas
+                    //del datatable de detalles
+                    TrasladarDetalles();
+
+                    //ahora que tenemos todo listo, procedemos a agregar el movimiento
+                    if (MiMovimientoLocal.Agregar())
+                    {
+
+                        MessageBox.Show("el movimiento se ha agregado correctamente",
+                            ":)", MessageBoxButtons.OK);
+
+                        //GENERAR REPORTE
+                        //1. crear un objeto de tipo documento
+                        CrystalDecisions.CrystalReports.Engine.ReportDocument MiReporte = new CrystalDecisions.CrystalReports.Engine.ReportDocument();
+
+                        //2. Crear objeto del reporte que se quiere usar
+                        MiReporte = new Reportes.RptMovimiento();
+
+                        //3. Llamar a la funcion que extrae los datos de la base de datos
+                        MiReporte = MiMovimientoLocal.Imprimir(MiReporte);
+
+                        //4. Dibujar el reporte en pantalla
+                        FrmVisualizadorReportes MiVisualizador = new FrmVisualizadorReportes();
+
+                        MiVisualizador.CrvVisualizador.ReportSource = MiReporte;
+
+                        MiVisualizador.Show();
+
+                        //TODO: Limpiar formulario
+
+                    }
 
                 }
 
@@ -99,7 +127,7 @@ namespace P520233_ByronGomez.Formularios
 
         private bool ValidarMovimiento()
         {
-           
+
             bool R = false;
 
             if (DtpFecha.Value.Date <= DateTime.Now.Date &&
@@ -207,7 +235,7 @@ namespace P520233_ByronGomez.Formularios
 
             DialogResult resp = FormDetalleProducto.ShowDialog();
 
-            if (resp == DialogResult.OK) 
+            if (resp == DialogResult.OK)
             {
                 DgvListaDetalle.DataSource = DtListaDetalleProductos;
 
