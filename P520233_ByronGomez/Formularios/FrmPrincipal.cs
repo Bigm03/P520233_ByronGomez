@@ -84,5 +84,16 @@ namespace P520233_ByronGomez.Formularios
                 Globales.ObjetosGlobales.MiFormularioMovimientos.Show();
             }
         }
+
+        private void MnuGestionProductos_Click(object sender, EventArgs e)
+        {
+            if (!Globales.ObjetosGlobales.MiFormularioDeGestionDeProductos.Visible)
+            {
+                Globales.ObjetosGlobales.MiFormularioDeGestionDeProductos = new FrmProductoGestion();
+
+                Globales.ObjetosGlobales.MiFormularioDeGestionDeProductos.Show();
+            }
+
+        }
     }
 }

@@ -470,19 +470,6 @@ namespace P520233_ByronGomez.Formularios
         private void CbVerActivos_CheckedChanged(object sender, EventArgs e)
         {
 
-            CargarListaUsuarios(CbVerActivos.Checked);
-
-
-            if (CbVerActivos.Checked)
-            {
-                BtnEliminar.Text = "ELIMINAR";
-            }
-            else
-            {
-                BtnEliminar.Text = "ACTIVAR";
-            }
-
-
         }
 
         private void TxtBuscar_TextChanged(object sender, EventArgs e)

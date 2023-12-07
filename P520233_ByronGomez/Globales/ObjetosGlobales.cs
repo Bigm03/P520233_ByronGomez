@@ -24,5 +24,10 @@ namespace P520233_ByronGomez.Globales
         public static Formularios.FrmMovimientosInventario
             MiFormularioMovimientos = new Formularios.FrmMovimientosInventario();
 
+        //Producto
+        public static Formularios.FrmProductoGestion
+            MiFormularioDeGestionDeProductos= new Formularios.FrmProductoGestion();
+
+        public static Logica.Models.Producto MiProductoGlobal = new Logica.Models.Producto();
     }
 }

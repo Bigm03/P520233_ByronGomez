@@ -40,6 +40,7 @@
             this.MnuGestionCategorias = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.pROCESOSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.entradasYSalidasDeInventarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gALERIADEREPORTESToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listaDeUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listaDeProductosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,7 +49,6 @@
             this.inventarioABCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.entradasYSalidasDeInventarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -124,6 +124,7 @@
             this.MnuGestionProductos.Name = "MnuGestionProductos";
             this.MnuGestionProductos.Size = new System.Drawing.Size(189, 22);
             this.MnuGestionProductos.Text = "Gestión de Productos";
+            this.MnuGestionProductos.Click += new System.EventHandler(this.MnuGestionProductos_Click);
             // 
             // toolStripSeparator3
             // 
@@ -149,6 +150,14 @@
             this.pROCESOSToolStripMenuItem.Name = "pROCESOSToolStripMenuItem";
             this.pROCESOSToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.pROCESOSToolStripMenuItem.Text = "PROCESOS";
+            // 
+            // entradasYSalidasDeInventarioToolStripMenuItem
+            // 
+            this.entradasYSalidasDeInventarioToolStripMenuItem.Name = "entradasYSalidasDeInventarioToolStripMenuItem";
+            this.entradasYSalidasDeInventarioToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.entradasYSalidasDeInventarioToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
+            this.entradasYSalidasDeInventarioToolStripMenuItem.Text = "Entradas y Salidas de Inventario";
+            this.entradasYSalidasDeInventarioToolStripMenuItem.Click += new System.EventHandler(this.entradasYSalidasDeInventarioToolStripMenuItem_Click);
             // 
             // gALERIADEREPORTESToolStripMenuItem
             // 
@@ -203,14 +212,6 @@
             this.ayudaToolStripMenuItem.Name = "ayudaToolStripMenuItem";
             this.ayudaToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.ayudaToolStripMenuItem.Text = "Ayuda...";
-            // 
-            // entradasYSalidasDeInventarioToolStripMenuItem
-            // 
-            this.entradasYSalidasDeInventarioToolStripMenuItem.Name = "entradasYSalidasDeInventarioToolStripMenuItem";
-            this.entradasYSalidasDeInventarioToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.entradasYSalidasDeInventarioToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
-            this.entradasYSalidasDeInventarioToolStripMenuItem.Text = "Entradas y Salidas de Inventario";
-            this.entradasYSalidasDeInventarioToolStripMenuItem.Click += new System.EventHandler(this.entradasYSalidasDeInventarioToolStripMenuItem_Click);
             // 
             // FrmPrincipal
             // 

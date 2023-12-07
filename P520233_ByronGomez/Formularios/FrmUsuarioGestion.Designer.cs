@@ -101,7 +101,6 @@
             this.CbVerActivos.TabIndex = 2;
             this.CbVerActivos.Text = "Ver Usuarios Activos";
             this.CbVerActivos.UseVisualStyleBackColor = true;
-            this.CbVerActivos.CheckedChanged += new System.EventHandler(this.CbVerActivos_CheckedChanged);
             // 
             // DgvListausuarios
             // 
@@ -518,6 +517,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.Name = "FrmUsuarioGestion";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Mantenimiento de Usuarios";
             this.Load += new System.EventHandler(this.FrmUsuarioGestion_Load);
             ((System.ComponentModel.ISupportInitialize)(this.DgvListausuarios)).EndInit();
